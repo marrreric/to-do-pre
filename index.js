@@ -35,8 +35,8 @@ function createItem(item) {
     deleteButton.addEventListener("click", () => {
     	clone.remove();
 
-    	const items = getTasksFromDOM();
-    	saveTasks(items);
+    	const tasks = getTasksFromDOM();
+    	saveTasks(tasks);
     });
 
     duplicateButton.addEventListener("click", () => {
@@ -45,8 +45,20 @@ function createItem(item) {
     	const newItem = createItem(itemName);
     	listElement.prepend(newItem);
 
-    	const items = getTasksFromDOM();
-    	saveTasks(items);
+    	const tasks = getTasksFromDOM();
+    	saveTasks(tasks);
+    });
+
+    editButton.addEventListener("click", () => {
+    	textElement.setAttribute("contenteditable", "true");
+    	textElement.focus();
+    });
+
+    textElement.addEventListener("blur", () => {
+    	textElement.setAttribute("contenteditable", "false");
+
+    	const tasks = getTasksFromDOM();
+    	saveTasks(tasks);
     });
 
     return clone;
@@ -75,7 +87,8 @@ items.forEach((item) => {
 formElement.addEventListener("submit", (event) => {
 	event.preventDefault();
 
-	const item = inputElement.value;
+	const item = inputElement.value.trim();
+    if (!item) return;
 
 	const itemElement = createItem(item);
 	listElement.prepend(itemElement);
